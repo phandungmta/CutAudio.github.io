@@ -1,0 +1,449 @@
+<html>
+
+<head>
+    <title>Cut Audio</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+
+    <!-- jQuery library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.7.7/xlsx.core.min.js"></script>
+
+    <script src="js/script.js"></script>
+    <script src="js/jquery.tableToExcel.js"></script>
+    <!-- <script src="js/audioScript.js"></script> -->
+    <link href="https://fonts.googleapis.com/css?family=Quicksand" rel="stylesheet">
+
+    <!-- Latest compiled JavaScript -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+</head>
+
+<body>
+
+    <div class="jumbotron text-center">
+        <h1>Cut audio</h1>
+
+        <div>
+            <input type="file" accept="audio/*" placeholder="Chọn tệp âm thanh" />
+        </div>
+
+        <div class="row justify-content-md-center">
+            <div class="col-1 col-ms-2">
+                <label for="numberStart">Số hiện tại</label>
+            </div>
+            <div class=" col-ms-6">
+                <input type="text" id="numberStart" />
+
+            </div>
+
+
+        </div>
+        <div class="row justify-content-md-center">
+            <div class="col-1 col-ms-2">
+                <label for="timePause">thời gian dừng </label>
+
+            </div>
+            <div class=" col-ms-6">
+                <input type="text" id="timePause" />
+
+            </div>
+
+
+        </div>
+        <div class="row justify-content-md-center">
+            <button id="starttime" onclick="startTime()" class="btn btn-success">Dừng và lưu thời gian bắt đầu</button>
+
+        </div>
+        <div class="row justify-content-md-center">
+            <button id="endtime" onclick="saveTime()" class="btn btn-danger">Dừng và lưu thơi gian kết thúc</button>
+
+
+
+        </div>
+        <div class="row justify-content-md-center">
+            <button id="nexttime" onclick="saveNextTime()" class="btn btn-primary">Tiếp tục và lưu thời gian bắt
+                đầu</button>
+
+        </div>
+
+
+        <div id="message"></div>
+        <br />
+
+        <audio controls id="music" autoplay="autoplay" preload="auto">
+            Your browser does not support the audio format.
+        </audio>
+
+        <div id="audio_player" style="">
+
+            <button id='btnReplay' class='btn btn-primary' title='replay' accesskey="R"
+                onclick='replayAudio();'>Replay</button>
+            <button id='btnPlayPause' class='btn btn-success' title='play' accesskey="P"
+                onclick='playPauseAudio();'>Play</button>
+            <button id='btnStop' class='btn btn-danger' title='stop' accesskey="X" onclick='stopAudio();'>Stop</button>
+            <button id='btnContinue' class='btn btn-info' title='stop' accesskey="C"
+                onclick='Continue();'>Continue</button>
+
+
+        </div>
+        <br />
+
+        <div>
+            <label for="curenttime">thời gian hiện tại</label>
+            <input type="text" id="curenttime">
+            <button id="gototime" onclick="goToTime()"> nghe ở giây này</button>
+        </div>
+        <br />
+
+        <div id="sub"></div>
+
+    </div>
+    <div class="container"></div>
+
+
+
+
+    <div class="container">
+        <div class="file">
+            <label for="files"> chọn excel</label>
+            <input type="file" class="custom-file-upload" id="files" name="files" size="60" />
+        </div>
+        <h2>Basic Table</h2>
+        <button id="btnExport">Export Excel</button>
+        <div class="table-responsive">
+
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>id</th>
+                        <th>TEXT</th>
+                        <th>Start</th>
+                        <th>End</th>
+                    </tr>
+                </thead>
+                <tbody id="bodyTable">
+                </tbody>
+            </table>
+
+        </div>
+
+    </div>
+
+
+    </div>
+
+
+
+
+    <script>
+        var player = document.getElementById('music'); // id for audio element
+        var duration; // Duration of audio clip
+        btnPlayPause = document.getElementById('btnPlayPause');
+
+
+
+        source = document.getElementById('audioSource');
+        var start = 0;
+        var totalTime = parseFloat(player.duration)
+
+        var end = parseFloat(player.duration);
+
+
+        // Update the video volume
+
+
+        // Add a listener for the timeupdate event so we can update the progress bar
+        $('#btnExport').click(function () {
+            $('table').tblToExcel();
+        });
+
+
+        // Add a listener for the play and pause events so the buttons state can be updated
+        player.addEventListener('play', function () {
+            // Change the button to be a pause button
+            changeButtonType(btnPlayPause, 'pause', "btn btn-danger");
+            changeButtonType(document.getElementById('starttime'), 'Dừng và lưu thời gian bắt đầu', "btn btn-danger");
+            changeButtonType(document.getElementById('endtime'), 'Dừng và lưu thơi gian kết thúc', "btn btn-danger");
+
+        }, false);
+
+        player.addEventListener('pause', function () {
+            // Change the button to be a play button
+            changeButtonType(btnPlayPause, 'play', "btn btn-success");
+            changeButtonType(document.getElementById('starttime'), 'play', "btn btn-success");
+            changeButtonType(document.getElementById('endtime'), 'play', "btn btn-success");
+
+        }, false);
+
+        player.addEventListener("timeupdate", function () {
+            if (player.currentTime >= player.value) {
+                player.pause();
+            };
+
+        });
+
+
+
+
+
+
+        player.addEventListener('ended', function () { this.pause(); }, false);
+        function Continue() {
+            player.value = player.duration;
+            player.play()
+        }
+
+
+
+
+
+        function saveNextTime() {
+            if (player.src) {
+                if (player.paused || player.ended) {
+                    // Change the button to a pause button
+                    changeButtonType(btnPlayPause, 'pause', "btn btn-danger");
+                    changeButtonType(document.getElementById('endtime'), 'Dừng và lưu thời gian bắt đầu', "btn btn-danger");
+                    player.play();
+                    var n = document.getElementById("numberStart").value
+
+                    tmp = parseInt(n)
+
+
+                    var sTime = "s" + tmp
+                    document.getElementById(sTime).innerHTML = player.currentTime
+
+                    document.getElementById("timePause").value = player.currentTime
+
+
+                }
+
+            }
+        }
+        function saveTime() {
+            if (player.src) {
+                if (player.paused || player.ended) {
+                    // Change the button to a pause button
+                    changeButtonType(btnPlayPause, 'pause', "btn btn-danger");
+                    changeButtonType(document.getElementById('endtime'), 'Dừng và lưu thơi gian kết thúc', "btn btn-danger");
+                    player.play();
+                }
+                else {
+                    // Change the button to a play button
+                    changeButtonType(btnPlayPause, 'play', "btn btn-success");
+                    changeButtonType(document.getElementById('endtime'), 'play ', "btn btn-success");
+                    player.pause();
+
+                    var n = document.getElementById("numberStart").value
+
+                    tmp = parseInt(n)
+                    var nextNumber = tmp + 1
+
+
+                    var idText = "t" + nextNumber
+                    document.getElementById("sub").innerHTML = document.getElementById(idText).textContent
+
+
+
+
+                    var eTime = "e" + tmp
+                    document.getElementById(eTime).innerHTML = player.currentTime
+                    document.getElementById("numberStart").value = nextNumber
+                    document.getElementById("timePause").value = player.currentTime
+
+
+
+
+
+
+
+                }
+            }
+        }
+        function goToTime() {
+            var time = document.getElementById("curenttime").value;
+            var t = parseFloat(time);
+            player.currentTime = t;
+            player.play();
+        }
+        function listenTest(clicked_id) {
+            var id = parseInt(clicked_id)
+            var sidTime = "s" + id
+            var stime = document.getElementById(sidTime).textContent;
+            var st = parseFloat(stime)
+            start = st;
+
+            var eidTime = "e" + id
+            var etime = document.getElementById(eidTime).textContent;
+            var et = parseFloat(etime)
+            end = et;
+
+            document.getElementById("numberStart").value = parseInt(document.getElementById("i" + id).textContent);
+            document.getElementById("curenttime").value = st;
+            document.getElementById("timePause").value = document.getElementById("e" + id).textContent;
+
+            player.currentTime = st;
+            player.value = et;
+            player.play();
+
+
+
+
+
+        }
+
+
+
+        function startTime() {
+            if (player.src) {
+                if (player.paused || player.ended) {
+                    // Change the button to a pause button
+                    changeButtonType(btnPlayPause, 'pause', "btn btn-danger");
+                    changeButtonType(document.getElementById('starttime'), 'Dừng và lưu thời gian bắt đầu', "btn btn-danger");
+                    player.play();
+
+                }
+                else {
+                    // Change the button to a play button
+                    changeButtonType(btnPlayPause, 'play', "btn btn-success");
+                    changeButtonType(document.getElementById('starttime'), 'play', "btn btn-success");
+                    player.pause();
+
+                    var n = document.getElementById("numberStart").value
+
+                    tmp = parseInt(n)
+
+
+                    var sTime = "s" + tmp
+                    document.getElementById(sTime).innerHTML = player.currentTime
+
+                    document.getElementById("timePause").value = player.currentTime
+
+
+
+
+
+
+
+                }
+            }
+        }
+
+        function playPauseAudio() {
+            if (player.src) {
+                if (player.paused || player.ended) {
+                    // Change the button to a pause button
+                    changeButtonType(btnPlayPause, 'pause', "btn btn-success");
+                    player.play();
+                }
+                else {
+                    // Change the button to a play button
+                    changeButtonType(btnPlayPause, 'play', "btn btn-danger");
+                    player.pause();
+
+
+
+
+                }
+            }
+        }
+
+        // Stop the current media from playing, and return it to the start position
+        function stopAudio() {
+            if (player.src) {
+                player.pause();
+                if (player.currentTime) player.currentTime = 0;
+            }
+        }
+
+
+
+        // Replays the media currently loaded in the player
+        function replayAudio() {
+            if (player.src) {
+                resetPlayer();
+                player.play();
+            }
+        }
+
+
+
+        // Updates a button's title, innerHTML and CSS class
+        function changeButtonType(btn, value, classname) {
+            btn.title = value;
+            btn.innerHTML = value;
+            btn.className = value;
+            btn.className = classname;
+        }
+
+        function resetPlayer() {
+
+            //clear the current song
+            player.src = '';
+            // Move the media back to the start
+            player.currentTime = 0;
+            // Set the play/pause button to 'play'
+            changeButtonType(btnPlayPause, 'play', "btn btn-success");
+        }
+
+        function displayMessage(message, canPlay) {
+            var element = document.querySelector('#message');
+            element.innerHTML = message;
+            element.className = canPlay ? 'info' : 'error';
+        }
+
+        function playSelectedFile(event) {
+            var file = this.files[0],
+                type = file.type,
+                canPlay = player.canPlayType(type),
+                message = 'Can play type "' + type
+                    + '": ' + (canPlay ? canPlay : 'no');
+            displayMessage(message, canPlay);
+
+            if (canPlay) player.src = URL.createObjectURL(file);
+            else resetPlayer();
+        }
+
+        var inputNode = document.querySelector('input');
+        inputNode.addEventListener('change', playSelectedFile, false);
+
+
+
+        var x = document.getElementById("myAudio");
+
+        function playAudio() {
+            x.play();
+        }
+
+        function pauseAudio() {
+            x.pause();
+        }
+
+        $(document).ready(function () {
+            $("#numberStart").change(function () {
+                var n = document.getElementById("numberStart").value
+                tmp = parseInt(n)
+                var idText = "t" + tmp
+                document.getElementById("sub").innerHTML = document.getElementById(idText).textContent
+
+            });
+        });
+
+
+
+    </script>
+
+
+</body>
+
+</html>
