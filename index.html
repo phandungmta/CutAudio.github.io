@@ -124,7 +124,7 @@
 
             </div>
             <div class="col-4">
-                <button id="pass" onclick="passNextTime()" class="btn btn-primary">Bỏ qua đến câu tiếp theo</button>
+                <button id="pass" onclick="passToNext()" class="btn btn-primary">Bỏ qua đến câu tiếp theo</button>
 
             </div>
 
@@ -510,20 +510,21 @@
 
 
 
-        var x = document.getElementById("myAudio");
 
-        function playAudio() {
-            x.play();
-        }
-
-        function pauseAudio() {
-            x.pause();
-        }
 
         function chooseSpeed() {
             var n = document.getElementById("numberSpeed").value
             tmp = parseFloat(n)
             player.playbackRate = tmp
+
+        }
+
+        function passToNext() {
+            var n = document.getElementById("numberStart").value
+            tmp = parseInt(n) + 1
+            document.getElementById("numberStart").value = tmp
+            var idText = "t" + tmp
+            document.getElementById("sub").innerHTML = document.getElementById(idText).textContent
 
         }
 
