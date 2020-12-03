@@ -31,82 +31,156 @@
 
 <body>
 
-    <div class="jumbotron text-center">
-        <h1>Cut audio</h1>
+    <div class="container">
+        <div class="row justify-content-md-center">
+            <h1>Cut audio</h1>
+
+
+        </div>
+
+        <div class="row">
+
+
+
+
+
+            <div class="col-2">
+                <div class="input-group input-group-sm">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="inputGroup-sizing-sm1">Số hiện tại</span>
+                    </div>
+                    <input type="text" id="numberStart" class="form-control" aria-label="Sizing example input"
+                        aria-describedby="inputGroup-sizing-sm1" />
+
+                </div>
+
+            </div>
+
+
+            <div class="col-3">
+                <div class="input-group input-group-sm">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="inputGroup-sizing-sm2">Thời gian dừng</span>
+                    </div>
+                    <input type="text" id="timePause" class="form-control" aria-label="Sizing example input"
+                        aria-describedby="inputGroup-sizing-sm" />
+
+                </div>
+            </div>
+            <div class="row justify-content-md-center">
+                <input type="file" accept="audio/*" placeholder="Chọn tệp âm thanh" id="audioSource" />
+
+            </div>
+
+            <div class="col-4">
+                <audio controls id="music" autoplay="autoplay" preload="auto">
+                    Your browser does not support the audio format.
+                </audio>
+            </div>
+            <div class="col-4">
+                <button id="starttime" onclick="startTime()" class="btn btn-success">Dừng và lưu thời gian bắt
+                    đầu</button>
+
+            </div>
+            <div class="col-4">
+                <button id="endtime" onclick="saveTime()" class="btn btn-danger">Dừng và lưu thơi gian kết thúc</button>
+
+            </div>
+
+            <div class="col-4">
+                <div id="audio_player" style="">
+
+
+                    <button id='btnPlayPause' class='btn btn-success' title='play' accesskey="P"
+                        onclick='playPauseAudio();'>Play</button>
+                    <button id='btnStop' class='btn btn-danger' title='stop' accesskey="X"
+                        onclick='stopAudio();'>Stop</button>
+                    <button id='btnContinue' class='btn btn-info' title='stop' accesskey="C"
+                        onclick='Continue();'>Continue</button>
+
+                    <div class="col"></div>
+
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <button class="btn btn-outline-secondary" type="button" id="chooseSpeed"
+                                onclick="chooseSpeed()">Tốc độ phát</button>
+                        </div>
+                        <input type="number" id="numberSpeed" class="form-control" placeholder=""
+                            aria-label="Example text with button addon" aria-describedby="chooseSpeed" value="1">
+                    </div>
+
+
+
+                </div>
+
+            </div>
+            <div class="col-12">
+
+
+            </div>
+            <div class="col-4">
+                <button id="nexttime" onclick="saveNextTime()" class="btn btn-primary">Tiếp tục và lưu thời gian bắt
+                    đầu</button>
+
+            </div>
+            <div class="col-4">
+                <button id="pass" onclick="passNextTime()" class="btn btn-primary">Bỏ qua đến câu tiếp theo</button>
+
+            </div>
+
+
+            <div class="col-4">
+
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <button class="btn btn-outline-secondary" type="button" id="gototime" onclick="goToTime()">nghe
+                            ở giây này</button>
+                    </div>
+                    <input type="text" id="curenttime" class="form-control" placeholder=""
+                        aria-label="Example text with button addon" aria-describedby="gototime">
+                </div>
+
+
+            </div>
+
+
+
+
+
+
+
+
+
+
+        </div>
+
+
+
+
+
+        <div class="row justify-content-md-center">
+            <h3 id="sub"></h3>
+
+
+        </div>
+
+
+        <div id="message" hidden></div>
+        <br />
+
+
+
+
+        <br />
 
         <div>
-            <input type="file" accept="audio/*" placeholder="Chọn tệp âm thanh" />
-        </div>
 
-        <div class="row justify-content-md-center">
-            <div class="col-1 col-ms-2">
-                <label for="numberStart">Số hiện tại</label>
-            </div>
-            <div class=" col-ms-6">
-                <input type="text" id="numberStart" />
-
-            </div>
-
-
-        </div>
-        <div class="row justify-content-md-center">
-            <div class="col-1 col-ms-2">
-                <label for="timePause">thời gian dừng </label>
-
-            </div>
-            <div class=" col-ms-6">
-                <input type="text" id="timePause" />
-
-            </div>
-
-
-        </div>
-        <div class="row justify-content-md-center">
-            <button id="starttime" onclick="startTime()" class="btn btn-success">Dừng và lưu thời gian bắt đầu</button>
-
-        </div>
-        <div class="row justify-content-md-center">
-            <button id="endtime" onclick="saveTime()" class="btn btn-danger">Dừng và lưu thơi gian kết thúc</button>
-
-
-
-        </div>
-        <div class="row justify-content-md-center">
-            <button id="nexttime" onclick="saveNextTime()" class="btn btn-primary">Tiếp tục và lưu thời gian bắt
-                đầu</button>
-
-        </div>
-
-
-        <div id="message"></div>
-        <br />
-
-        <audio controls id="music" autoplay="autoplay" preload="auto">
-            Your browser does not support the audio format.
-        </audio>
-
-        <div id="audio_player" style="">
-
-            <button id='btnReplay' class='btn btn-primary' title='replay' accesskey="R"
-                onclick='replayAudio();'>Replay</button>
-            <button id='btnPlayPause' class='btn btn-success' title='play' accesskey="P"
-                onclick='playPauseAudio();'>Play</button>
-            <button id='btnStop' class='btn btn-danger' title='stop' accesskey="X" onclick='stopAudio();'>Stop</button>
-            <button id='btnContinue' class='btn btn-info' title='stop' accesskey="C"
-                onclick='Continue();'>Continue</button>
 
 
         </div>
         <br />
 
-        <div>
-            <label for="curenttime">thời gian hiện tại</label>
-            <input type="text" id="curenttime">
-            <button id="gototime" onclick="goToTime()"> nghe ở giây này</button>
-        </div>
-        <br />
 
-        <div id="sub"></div>
 
     </div>
     <div class="container"></div>
@@ -115,30 +189,45 @@
 
 
     <div class="container">
-        <div class="file">
-            <label for="files"> chọn excel</label>
-            <input type="file" class="custom-file-upload" id="files" name="files" size="60" />
-        </div>
-        <h2>Basic Table</h2>
-        <button id="btnExport">Export Excel</button>
-        <div class="table-responsive">
+        <div class="row">
+            <div class="col-6">
 
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>id</th>
-                        <th>TEXT</th>
-                        <th>Start</th>
-                        <th>End</th>
-                    </tr>
-                </thead>
-                <tbody id="bodyTable">
-                </tbody>
-            </table>
+                <input type="file" class="custom-file-upload" id="files" name="files" size="60" />
+
+
+            </div>
+            <div class="offset-4">
+                <button id="btnExport">Xuất Excel</button>
+
+            </div>
+            <div class="col align-self-center">
+                <h2>Basic Table</h2>
+
+            </div>
+
+
+
+            <div class="table-responsive">
+
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>id</th>
+                            <th>TEXT</th>
+                            <th>Start</th>
+                            <th>End</th>
+                        </tr>
+                    </thead>
+                    <tbody id="bodyTable">
+                    </tbody>
+                </table>
+
+            </div>
 
         </div>
 
     </div>
+
 
 
     </div>
@@ -153,7 +242,9 @@
 
 
 
-        source = document.getElementById('audioSource');
+
+        source = document.getElementById('audioSource').value;
+        player.src = source
         var start = 0;
         var totalTime = parseFloat(player.duration)
 
@@ -414,7 +505,7 @@
             else resetPlayer();
         }
 
-        var inputNode = document.querySelector('input');
+        var inputNode = document.querySelector('#audioSource');
         inputNode.addEventListener('change', playSelectedFile, false);
 
 
@@ -429,6 +520,13 @@
             x.pause();
         }
 
+        function chooseSpeed() {
+            var n = document.getElementById("numberSpeed").value
+            tmp = parseFloat(n)
+            player.playbackRate = tmp
+
+        }
+
         $(document).ready(function () {
             $("#numberStart").change(function () {
                 var n = document.getElementById("numberStart").value
@@ -438,6 +536,8 @@
 
             });
         });
+
+
 
 
 
