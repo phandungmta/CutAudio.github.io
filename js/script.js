@@ -28,6 +28,9 @@ function handleFile(e) {
                 document.getElementById("numberStart").value = parseInt(result[0]['id'])
                 document.getElementById("sub").innerHTML = result[0]['text']
             }
+            var Table = document.getElementById("bodyTable");
+            Table.innerHTML = ""
+            
 
             //Get the first column first cell value
             for (i = 0; i <= result.length; i++) {
