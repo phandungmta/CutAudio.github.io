@@ -1,26 +1,8 @@
-<!-- <html>
-
-<body>
-    
-
-    <script>localStorage.setItem("firstname", "Smith");</script>
-    <a href="test2.html">to test2</a>
-
-    <button type="button" onclick="loadXMLDoc()">
-        Get my CD collection</button>
-
-    <p id="demo"></p>
-    <script src="js/readXml.js"></script>
-
-</body>
-
-</html> -->
-
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-    <title>Bootstrap Example</title>
+    <title>Cut Audio</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
@@ -29,23 +11,10 @@
 </head>
 
 <body>
-    <script>
 
-        function passData(name, pathExcel, pathAudio) {
-            // var tmp = $(this)
-            // console.log(tmp)
-            // var pathExcel = $(this).data("excel");
-            // var pathAudio = $(this).data("audio");
-
-            localStorage.setItem("excel", pathExcel);
-            localStorage.setItem("audio", pathAudio);
-            localStorage.setItem("name", name);
-
-        }
-    </script>
 
     <div class="container">
-        <h2>Dynamic Tabs</h2>
+
         <ul class="nav nav-tabs">
             <li class="active"><a data-toggle="tab" href="#home">Robinson Crusoe (version 2)</a></li>
             <li><a data-toggle="tab" href="#menu1">Menu 1</a></li>
@@ -255,6 +224,21 @@
             </div>
         </div>
     </div>
+
+    <script>
+
+        function passData(name, pathExcel, pathAudio) {
+            // var tmp = $(this)
+            // console.log(tmp)
+            // var pathExcel = $(this).data("excel");
+            // var pathAudio = $(this).data("audio");
+
+            localStorage.setItem("excel", pathExcel);
+            localStorage.setItem("audio", pathAudio);
+            localStorage.setItem("name", name);
+
+        }
+    </script>
 
 </body>
 
