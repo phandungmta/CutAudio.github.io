@@ -343,8 +343,7 @@
                     var nextNumber = tmp + 1
 
 
-                    var idText = "t" + nextNumber
-                    document.getElementById("sub").innerHTML = document.getElementById(idText).textContent
+
 
 
 
@@ -353,6 +352,9 @@
                     document.getElementById(eTime).innerHTML = player.currentTime
                     document.getElementById("numberStart").value = nextNumber
                     document.getElementById("timePause").value = player.currentTime
+
+                    var idText = "t" + nextNumber
+                    document.getElementById("sub").innerHTML = document.getElementById(idText).textContent
 
 
 
